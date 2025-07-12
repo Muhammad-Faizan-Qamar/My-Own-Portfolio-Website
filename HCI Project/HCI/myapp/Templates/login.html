@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} Login Page {% endblock %}
+
+{% block body %}
+<style>
+.login-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10rem 9% 2rem;
+    min-height: 100vh;
+}
+.login-box {
+    text-align: center;
+    background: var(--second-bg-color); 
+    padding: 4rem 3rem;
+    border-radius: 2rem;
+    box-shadow: 0 0 2rem rgba(0, 238, 255, 0.2);
+    max-width: 40rem;
+    width: 100%;
+}
+.login-input {
+    width: 100%;
+    padding: 1.2rem 1.5rem;
+    margin: 1rem 0;
+    font-size: 1.6rem;
+    border-radius: 4rem;
+    border: none;
+    background: #fff;
+    color: #000;
+}
+.login-input::placeholder {
+    color: #555;
+}
+.login-btn {
+    display: inline-block;
+    padding: 1rem 3rem;
+    background: var(--main-color);
+    color: var(--second-bg-color);
+    font-size: 1.6rem;
+    font-weight: 600;
+    border-radius: 4rem;
+    margin-top: 1.5rem;
+    transition: .3s;
+    box-shadow: 0 0 1rem var(--main-color);
+    border: none;
+    cursor: pointer;
+}
+.login-btn:hover {
+    box-shadow: none;
+}
+.error-message {
+    color: white;
+    font-size: 1.2rem;
+    height: 1.0rem;
+    text-align: left;
+    padding-left: 1.5rem;
+    margin: 0;
+}
+.login-links {
+    margin-top: 2rem;
+}
+.forgot-password {
+    color: var(--main-color);
+    font-size: 1.4rem;
+    display: block;
+    margin-bottom: 1rem;
+    text-decoration: none;
+}
+.signup-link {
+    color: #ccc;
+    font-size: 1.4rem;
+    text-decoration: none;
+}
+.signup-link span {
+    color: var(--main-color);
+}
+</style>
+
+<section class="home login-page">
+    <div class="home-content login-box">
+        <h2 class="heading">Login <span>Page</span></h2>
+        <form id="loginForm" onsubmit="return validateForm()">
+            <input type="text" id="username" placeholder="Username" required class="login-input">
+            <div id="usernameError" class="error-message"></div>
+
+            <input type="password" id="password" placeholder="Password" required class="login-input">
+            <div id="passwordError" class="error-message"></div>
+
+            <button type="submit" class="login-btn" target="_blank">Login</button>
+        </form>
+        <div class="login-links">
+            <a href="#" class="forgot-password">Forgot Password?</a>
+            <a href="{% url 'sign-up' %}" class="signup-link" target="_blank">Don't have an account? <span>Sign up</span></a>
+        </div>
+    </div>
+</section>
+
+<script>
+function validateForm() {
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value.trim();
+    document.getElementById('usernameError').textContent = '';
+    document.getElementById('passwordError').textContent = '';
+
+    if (!username) {
+        document.getElementById('usernameError').textContent = 'Username is required';
+        return false;
+    }
+    if (!password) {
+        document.getElementById('passwordError').textContent = 'Password is required';
+        return false;
+    }
+
+    try {
+        const storedData = localStorage.getItem('registeredCredentials');
+        if (!storedData) {
+            document.getElementById('usernameError').textContent = "No account found - please sign up first";
+            return false;
+        }
+        const creds = JSON.parse(storedData);
+        if (username !== creds.username) {
+            document.getElementById('usernameError').textContent = "Username doesn't match";
+            return false;
+        }
+        if (password !== creds.password) {
+            document.getElementById('passwordError').textContent = "Password doesn't match";
+            return false;
+        }
+        localStorage.setItem('isLoggedIn', 'true');
+        window.location.href = "{% url 'home' %}";
+    } catch (e) {
+        console.error("Login Error:", e);
+        document.getElementById('usernameError').textContent = "Login error - try again";
+    }
+    return false;
+}
+
+document.getElementById('username').addEventListener('input', () => {
+    document.getElementById('usernameError').textContent = '';
+});
+document.getElementById('password').addEventListener('input', () => {
+    document.getElementById('passwordError').textContent = '';
+});
+</script>
+{% endblock %}

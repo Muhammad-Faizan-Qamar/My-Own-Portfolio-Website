@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %} About Page {% endblock %}
+
+{% block body %}
+
+<style>
+        .about {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 5rem;
+    }
+
+    .about-img {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+    }
+
+    .about-img img {
+        width: 100%;
+        max-width: 400px;
+        border-radius: 2rem;
+        box-shadow: 0 0 2rem var(--main-color);
+    }
+
+    .about-content {
+        flex: 1;
+        max-width: 600px;
+    }
+</style>
+
+<section class="about" id="about">
+    <div class="about-img">
+        <img src="{% static 'images/9.png' %}" alt="About Image">
+    </div>
+    <div class="about-content">
+        <h2 class="heading">About <span>Me</span></h2>
+        <h3>Full-Stack Developer</h3>
+        <p>I'm a <b>Full-Stack Web Developer</b> and <b>Graphic Designer</b> who enjoys creating websites and web apps that not only look great but also perform efficiently.</p>
+        <p>On the frontend, I work with <b>HTML, CSS, and JavaScript</b>. On the backend, I use the <b>Django Framework</b> with <b>MySQL Workbench</b>.</p>
+        <p>As a <b>Graphic Designer</b>, I specialize in designing modern visuals including <b>logos and social media posts</b>.</p>
+        <p>My goal is to build websites that are fast, easy to use, visually appealing, and accessible on all devices.</p>
+        <p><b>Let’s team up and bring your vision to life — both in design and development!</b></p>
+        <a href="{% url 'contact' %}" class="btn" target="_blank">Contact Me</a>
+    </div>
+</section>
+
+
+{% endblock %}
