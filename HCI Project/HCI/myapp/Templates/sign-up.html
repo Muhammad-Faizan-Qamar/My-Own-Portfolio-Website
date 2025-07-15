@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} Sign Up Page {% endblock %}
+
+{% block body %}
+<style>
+.signup-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10rem 9% 2rem;
+    min-height: 100vh;
+}
+.signup-box {
+    text-align: center;
+    background: var(--second-bg-color); 
+    padding: 4rem 3rem;
+    border-radius: 2rem;
+    box-shadow: 0 0 2rem rgba(0, 238, 255, 0.2);
+    max-width: 40rem;
+    width: 100%;
+}
+.signup-input {
+    width: 100%;
+    padding: 1.2rem 1.5rem;
+    margin: 1rem 0;
+    font-size: 1.6rem;
+    border-radius: 4rem;
+    border: none;
+    background: #fff;
+    color: #000;
+}
+.signup-input::placeholder {
+    color: #555;
+}
+.signup-btn {
+    display: inline-block;
+    padding: 1rem 3rem;
+    background: var(--main-color);
+    color: var(--second-bg-color);
+    font-size: 1.6rem;
+    font-weight: 600;
+    border-radius: 4rem;
+    margin-top: 1.5rem;
+    transition: .3s;
+    box-shadow: 0 0 1rem var(--main-color);
+    border: none;
+    cursor: pointer;
+}
+.signup-btn:hover {
+    box-shadow: none;
+}
+.error-message {
+    color: white;
+    font-size: 1.2rem;
+    height: 1.0rem;
+    text-align: left;
+    padding-left: 1.5rem;
+    margin: 0;
+}
+.signup-links {
+    margin-top: 2rem;
+}
+.login-link {
+    color: #ccc;
+    font-size: 1.4rem;
+}
+.login-link span {
+    color: var(--main-color);
+}
+</style>
+
+<section class="home signup-page">
+    <div class="home-content signup-box">
+        <h2 class="heading">Sign <span>Up</span></h2>
+        <form id="signupForm" onsubmit="return validateSignupForm()">
+            <input type="text" id="name" placeholder="Full Name" required class="signup-input">
+            <div id="nameError" class="error-message"></div>
+
+            <input type="email" id="email" placeholder="Email" required class="signup-input">
+            <div id="emailError" class="error-message"></div>
+
+            <input type="text" id="username" placeholder="Username" required class="signup-input">
+            <div id="usernameError" class="error-message"></div>
+
+            <input type="password" id="password" placeholder="Password" required class="signup-input">
+            <div id="passwordError" class="error-message"></div>
+
+            <input type="password" id="confirmPassword" placeholder="Confirm Password" required class="signup-input">
+            <div id="confirmPasswordError" class="error-message"></div>
+
+            <button type="submit" target="_blank" class="signup-btn">Signup</button>
+        </form>
+        <div class="signup-links">
+            <p class="login-link">
+                Already have an account? 
+                <a href="{% url 'login' %}" target="_blank"><span>Login</span></a>
+            </p>
+        </div>
+    </div>
+</section>
+
+<script>
+function validateSignupForm() {
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value.trim();
+    const confirmPassword = document.getElementById('confirmPassword').value.trim();
+
+    let isValid = true;
+
+    document.getElementById('nameError').textContent = '';
+    document.getElementById('emailError').textContent = '';
+    document.getElementById('usernameError').textContent = '';
+    document.getElementById('passwordError').textContent = '';
+    document.getElementById('confirmPasswordError').textContent = '';
+
+    if (!name) {
+        document.getElementById('nameError').textContent = 'Full name is required';
+        isValid = false;
+    }
+    if (!email) {
+        document.getElementById('emailError').textContent = 'Email is required';
+        isValid = false;
+    } else if (!/^\S+@\S+\.\S+$/.test(email)) {
+        document.getElementById('emailError').textContent = 'Enter a valid email';
+        isValid = false;
+    }
+    if (!username) {
+        document.getElementById('usernameError').textContent = 'Username is required';
+        isValid = false;
+    }
+    if (!password) {
+        document.getElementById('passwordError').textContent = 'Password is required';
+        isValid = false;
+    } else if (password.length < 8) {
+        document.getElementById('passwordError').textContent = 'At least 8 characters';
+        isValid = false;
+    }
+    if (!confirmPassword) {
+        document.getElementById('confirmPasswordError').textContent = 'Confirm your password';
+        isValid = false;
+    } else if (confirmPassword !== password) {
+        document.getElementById('confirmPasswordError').textContent = "Passwords don't match";
+        isValid = false;
+    }
+
+    if (isValid) {
+        const credentials = { name, email, username, password };
+        localStorage.setItem('registeredCredentials', JSON.stringify(credentials));
+        window.location.href = "{% url 'login' %}";
+    }
+    return false;
+}
+
+['name','email','username','password','confirmPassword'].forEach(id => {
+    document.getElementById(id).addEventListener('input', () => {
+        document.getElementById(id + 'Error').textContent = '';
+    });
+});
+</script>
+{% endblock %}
